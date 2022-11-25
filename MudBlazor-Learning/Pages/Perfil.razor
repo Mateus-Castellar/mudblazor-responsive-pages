@@ -1,0 +1,32 @@
+﻿@page "/perfil"
+
+<MudContainer Class="mt-5">
+    <MudText Typo="Typo.h4" Align="Align.Center">Gerenciar Perfil</MudText>
+
+    <MudGrid>
+        <MudItem xs="12" sm="12" md="12" lg="12" xl="12" Class="d-flex justify-center mt-5">
+            <MudImage Src="https://picsum.photos/id/237/200/200" Alt="perfil" Elevation="25" Class="rounded-circle" />
+        </MudItem>
+        <MudItem xs="12" sm="12" md="12" lg="12" xl="12" Class="d-flex justify-center mt-5">
+            <MudPaper Width="400px">
+                <MudList Clickable="false">
+                    <MudListItem  Text="usuario@email.com" Icon="@Icons.Material.Filled.Email">
+                    </MudListItem>
+                    <MudDivider />
+                    <MudListItem Text="(18) 99963-5245" Icon="@Icons.Filled.LocalPhone" />
+                    <MudDivider />
+                    <MudListItem Text="07/03/2003" Icon="@Icons.Filled.DateRange" />
+                    <MudDivider />
+                    <MudListItem Text="123.456.654-20" Icon="@Icons.Filled.DocumentScanner" />
+                </MudList>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="12" md="12" lg="12" xl="12" Class="d-flex justify-center mt-1">
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Logout" Color="Color.Error">Encerrar sessão</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+
+}
