@@ -1,0 +1,69 @@
+﻿@page "/cards"
+@using MudBlazor.ViewModels;
+
+<MudContainer>
+    <MudText Typo="Typo.h3" Align="Align.Center">Listagem de cards responsivos</MudText>
+
+    <MudGrid Class="mt-8">
+        @foreach (var item in CardsList)
+        {
+            <MudItem xs="12" sm="6" md="6" lg="3" xl="3">
+                <MudCard>
+                    <MudCardMedia Image="https://picsum.photos/seed/picsum/500/500" Height="200"/>
+                    <MudCardContent>
+                        <MudText Typo="Typo.h5">@item.Titulo</MudText>
+                        <MudText Typo="Typo.body2">@item.Descricao</MudText>
+                        <MudText Typo="Typo.body2">This photo was taken in a small village in Istra Croatia.</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary">compartilhar</MudButton>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary">leia mais</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+</MudContainer>
+
+@code {
+    public ICollection<CardViewModel> CardsList { get; set; } = new List<CardViewModel>();
+
+    protected override Task OnInitializedAsync()
+    {
+        CardsList?.Add(new CardViewModel
+            {
+                Titulo = "Cards de teste",
+                Descricao = "Apenas uma descrição amigavel e qualquer",
+                Imagem = "https://picsum.photos/200"
+            });
+
+        CardsList?.Add(new CardViewModel
+            {
+                Titulo = "Cards de teste",
+                Descricao = "Apenas uma descrição amigavel e qualquer",
+                Imagem = "https://picsum.photos/200"
+            });
+
+        CardsList?.Add(new CardViewModel
+            {
+                Titulo = "Cards de teste",
+                Descricao = "Apenas uma descrição amigavel e qualquer",
+                Imagem = "https://picsum.photos/200"
+            });
+
+        CardsList?.Add(new CardViewModel
+            {
+                Titulo = "Cards de teste",
+                Descricao = "Apenas uma descrição amigavel e qualquer",
+                Imagem = "https://picsum.photos/200"
+            });
+        CardsList?.Add(new CardViewModel
+            {
+                Titulo = "Cards de teste",
+                Descricao = "Apenas uma descrição amigavel e qualquer",
+                Imagem = "https://picsum.photos/200"
+            });
+
+        return base.OnInitializedAsync();
+    }
+}
