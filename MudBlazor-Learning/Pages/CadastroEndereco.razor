@@ -1,0 +1,95 @@
+﻿@page "/endereco"
+@using MudBlazor.ViewModels;
+@using System.Text.Json;
+
+<MudContainer Class="mt-8">
+    <MudText Typo="Typo.h4" Align="Align.Center">Cadastrar Endereco Com Busca CEP</MudText>
+
+    <MudForm @ref="Form" @bind-IsValid="@Success" @bind-Errors="@Erros">
+        <MudGrid Class="mt-8">
+            <MudItem xs="12" sm="12" md="12" class="@(Visivel? "d-show" : "d-none")">
+                <MudAlert Severity="Severity.Success" Variant="Variant.Filled" ShowCloseIcon="true" CloseIconClicked="@(() => Visivel = !Visivel)">Endereço Cadastrado com sucesso!</MudAlert>
+            </MudItem>
+            <MudItem xs="12" sm="12" md="6">
+                <MudTextField Required="true" RequiredError="Cep é obrigatório!" @bind-Value="Endereco.Cep" @onfocusout="@(() => BuscarEnderecoApiViaCep(Endereco.Cep ?? ""))" Label="Cep" Variant="Variant.Filled" Clearable="true"></MudTextField>
+            </MudItem>
+            <MudItem xs="12" sm="12" md="6">
+                <MudTextField Required="true" RequiredError="logradouro é obrigatório!" @bind-Value="Endereco.Logradouro" Label="Logradouro" Variant="Variant.Filled" Clearable="true"></MudTextField>
+            </MudItem>
+            <MudItem xs="12" sm="12" md="6">
+                <MudTextField Required="true" RequiredError="cidade é obrigatório!" @bind-Value="Endereco.Localidade" Label="Cidade" Variant="Variant.Filled" Clearable="true"></MudTextField>
+            </MudItem>
+            <MudItem xs="12" sm="12" md="6">
+                <MudTextField Required="true" RequiredError="estado é obrigatório!" @bind-Value="Endereco.Uf" Label="Estado" Variant="Variant.Filled" Clearable="true"></MudTextField>
+            </MudItem>
+            <MudItem xs="12" sm="12" md="6">
+                <MudTextField @bind-Value="Endereco.Complemento" Label="Complemento" Variant="Variant.Filled" Clearable="true"></MudTextField>
+            </MudItem>
+            <MudItem xs="12" sm="12" md="6">
+                <MudTextField Required="true" RequiredError="número é obrigatório!" @bind-Value="Endereco.Numero" Label="Número" Variant="Variant.Filled" Clearable="true"></MudTextField>
+            </MudItem>
+            <MudItem xs="3" sm="2" md="2" lg="1" xl="1" Class="mr-3">
+                <MudButton OnClick="BotaoCadastrar" Variant="Variant.Filled" Color="Color.Primary">Cadastar</MudButton>
+            </MudItem>
+            <MudItem xs="3" sm="2" md="2" lg="1" xl="1">
+                <MudButton @onclick="LimparCampos" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error">Limpar</MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudForm>
+</MudContainer>
+
+@code {
+
+    public EnderecoViewModel Endereco { get; set; } = new();
+    public bool Visivel { get; set; }
+    public bool Success { get; set; }
+    public string[]? Erros { get; set; }
+    MudForm? Form;
+
+    [Inject]
+    public HttpClient HttpClient { get; set; } = null!;
+
+    public async Task BuscarEnderecoApiViaCep(string cep)
+    {
+        var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+        if (string.IsNullOrEmpty(cep) || cep.Length != 8) return;
+
+        var response = await HttpClient.GetAsync($"https://viacep.com.br/ws/{cep}/json/");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var resultado = await response.Content.ReadAsStringAsync();
+            var resultDeserialize = JsonSerializer.Deserialize<EnderecoViewModel>(resultado, options);
+
+            if (resultDeserialize is not null)
+            {
+                Endereco = resultDeserialize;
+                StateHasChanged();
+                Form?.Validate();
+            }
+        }
+    }
+
+    public void LimparCampos()
+    {
+        Form?.Reset();
+        Form?.ResetValidation();
+    }
+
+    public void BotaoCadastrar()
+    {
+        Form?.Validate();
+
+        if (Form is not null && Form.IsValid)
+        {
+            Visivel = true;
+            LimparCampos();
+        }
+
+        StateHasChanged();
+    }
+}
